@@ -29,7 +29,7 @@ import pylab as plt #used for the colormaps
 try:
   from libDetXR.procMoment import ProcMoment
 except ImportError as e:
-  print('ImportError: '+e.message)
+  print(e)
 
 
 #from scipy import ndimage as ndi

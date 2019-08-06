@@ -55,7 +55,7 @@ def MplAddAllColormaps(colMapNameLst=None):
   try:
     import matplotlib.cm as cm
   except ImportError as e:
-    print('ImportError: '+e.message)
+    print(e)
   if not colMapNameLst:
     colMapNameLst=[m for m in cm.datad if not m.endswith("_r")]
   for m in colMapNameLst:

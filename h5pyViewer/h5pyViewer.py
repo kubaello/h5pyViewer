@@ -19,15 +19,15 @@ from hdfImage import  *
 try:
   from hdfImageGL import  *
 except ImportError as e:
-  print('ImportError: '+e.message)
+  print(e)
 try:
   from FrmPyFAI import  *
 except ImportError as e:
-  print('ImportError: '+e.message)
+  print(e)
 try:
   from FrmProcRoiStat import ProcRoiStatFrame
 except ImportError as e:
-  print('ImportError: '+e.message)
+  print(e)
 
 import utilities as ut
 
