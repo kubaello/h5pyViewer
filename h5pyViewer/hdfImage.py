@@ -370,13 +370,18 @@ class DlgColBarSetup(wx.Dialog):
 class HdfImageFrame(wx.Frame):
   def __init__(self, parent,lbl,hid):
     wx.Frame.__init__(self, parent, title=lbl, size=wx.Size(850, 650))
-    imgDir=ut.Path.GetImage()
-    icon = wx.Icon(os.path.join(imgDir,'h5pyViewer.ico'), wx.BITMAP_TYPE_ICO)
-    self.SetIcon(icon)
 
     t=type(hid)
     if t==h5py.h5d.DatasetID:
       data=h5py.Dataset(hid)
+
+    self.data = data
+    self.idxXY = (data.ndim-2, data.ndim-1)
+    self.slice_idx = [0,] * data.ndim
+
+    imgDir=ut.Path.GetImage()
+    icon = wx.Icon(os.path.join(imgDir,'h5pyViewer.ico'), wx.BITMAP_TYPE_ICO)
+    self.SetIcon(icon)
 
     canvas =  MPLCanvasImg(self,self.SetStatusCB)
 
@@ -386,21 +391,35 @@ class HdfImageFrame(wx.Frame):
 
     toolbar=ut.AddToolbar(canvas,sizer)
 
-    wxAxCtrlLst=[]
-    l=len(data.shape)
-    idxXY=(l-2,l-1)
+    xy_sel_sizer = wx.BoxSizer(wx.HORIZONTAL)
+    xy_sel_sizer.Add(wx.StaticText(self, label="X Axis:"), wx.ALIGN_CENTER_VERTICAL)
+    x_axis_combo = wx.ComboBox(self, -1, choices=tuple(str(x) for x in range(0,data.ndim)), style=wx.CB_READONLY, size=wx.Size(100, -1))
+    x_axis_combo.SetValue(str(self.idxXY[0]))
+
+    xy_sel_sizer.Add(x_axis_combo, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=10)
+    xy_sel_sizer.Add(wx.StaticText(self, label="Y Axis:"), wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=20)
+    y_axis_combo = wx.ComboBox(self, -1, choices=tuple(str(x) for x in range(0,data.ndim)), style=wx.CB_READONLY, size=wx.Size(100, -1))
+    y_axis_combo.SetValue(str(self.idxXY[1]))
+    xy_sel_sizer.Add(y_axis_combo, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=10)
+
+    self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, x_axis_combo)
+    self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, y_axis_combo)
+    self.x_axis_combo = x_axis_combo
+    self.y_axis_combo = y_axis_combo
+    sizer.Add(xy_sel_sizer, 0, wx.ALIGN_LEFT)
+
+    self.wxAxCtrlLst=[]
     for idx,l in enumerate(data.shape):
-      if idx in idxXY:
+      if idx in self.idxXY:
         continue
-      wxAxCtrl=ut.SliderGroup(self, label='Axis:%d'%idx,range=(0,l-1))
+      wxAxCtrl=ut.SliderGroup(self, label='', range=(0,1))
       wxAxCtrl.idx=idx
-      wxAxCtrlLst.append(wxAxCtrl)
+      self.wxAxCtrlLst.append(wxAxCtrl)
       sizer.Add(wxAxCtrl.sizer, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, border=5)
       wxAxCtrl.SetCallback(HdfImageFrame.OnSetView,wxAxCtrl)
+    self.updateSliceSliders()
 
-    sl=ut.GetSlice(idxXY,data.shape,wxAxCtrlLst)
-
-    canvas.InitChild(data[sl])
+    canvas.InitChild(data[self.getSlice()])
 
     #self.Fit()
     self.Centre()
@@ -409,9 +428,6 @@ class HdfImageFrame(wx.Frame):
     self.canvas=canvas
     self.sizer=sizer
     self.toolbar=toolbar
-    self.data=data
-    self.idxXY=idxXY
-    self.wxAxCtrlLst=wxAxCtrlLst
 
   def BuildMenu(self,dtype):
     mnBar = wx.MenuBar()
@@ -442,6 +458,35 @@ class HdfImageFrame(wx.Frame):
   def SetIdxXY(self,x,y):
     self.idxXY=(x,y)
 
+  def updateSliceSliders(self):
+    sliders_axes = [i for i in range(0, self.data.ndim) if i not in self.idxXY]
+    for ax_idx, ax_ctrl in zip(sliders_axes, self.wxAxCtrlLst):
+      ax_ctrl.SetLabel('Axis %d' % ax_idx)
+      ax_ctrl.SetRange((0, self.data.shape[ax_idx]-1))
+      ax_ctrl.SetValue(self.slice_idx[ax_idx])
+      ax_ctrl.idx = ax_idx
+
+  def getSlice(self):
+    return tuple(idx if ax not in self.idxXY else slice(None) for ax, idx in enumerate(self.slice_idx))
+
+  def updateDisplayedSlice(self):
+    data=self.data
+    sl=self.getSlice()
+
+    try:
+      tomoNorm=self.tomoNorm
+      data=data[sl]*tomoNorm
+    except AttributeError:
+      data=data[sl]
+
+    self.canvas.img.set_data(data)
+    self.canvas.img._extent = None
+    self.canvas.img.set_extent(self.canvas.img.get_extent())
+
+    if self.mnItemShowMoment.IsChecked():
+      self.PlotMoments()
+    self.canvas.draw()
+
   @staticmethod
   def SetStatusCB(obj,mode,v):
     if mode==0:
@@ -451,26 +496,18 @@ class HdfImageFrame(wx.Frame):
     else:
       raise KeyError('wrong mode')
 
+  def OnSetAxes(self, evt):
+    self.idxXY = (int(self.x_axis_combo.GetValue()), int(self.y_axis_combo.GetValue()))
+    self.updateSliceSliders()
+    self.updateDisplayedSlice()
+
   @staticmethod
   def OnSetView(usrData,value,msg):
     'called when a slice is selected with the slider controls'
     imgFrm=usrData.slider.Parent
-    #imgFrm.img.set_array(imgFrm.data[usrData.value,...])
-    data=imgFrm.data
-    sl=ut.GetSlice(imgFrm.idxXY,data.shape,imgFrm.wxAxCtrlLst)
-
-    try:
-      tomoNorm=imgFrm.tomoNorm
-    except AttributeError:
-      imgFrm.canvas.img.set_array(data[sl])
-    else:
-      data=data[sl]*tomoNorm
-      imgFrm.canvas.img.set_array(data)
-
-    if imgFrm.mnItemShowMoment.IsChecked():
-      imgFrm.PlotMoments()
-    imgFrm.canvas.draw()
-    pass
+    for ax_ctl in imgFrm.wxAxCtrlLst:
+      imgFrm.slice_idx[ax_ctl.idx] = ax_ctl.value
+    imgFrm.updateDisplayedSlice()
 
   def OnShowMoments(self,event):
     if event.IsChecked():

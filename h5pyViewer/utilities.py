@@ -55,8 +55,14 @@ class SliderGroup():
     self.slider.SetValue(value)
     self.sliderText.SetValue(str(value))
 
+  def SetLabel(self, label):
+    self.sliderLabel.SetLabel(label)
+
   def SetCallback(self,funcCB,usrData):
     self.cbFuncData=(funcCB,usrData)
+
+  def SetRange(self, range):
+    self.slider.SetRange(range[0], range[1])
 
   def Callback(self,value,msg):
     try:
