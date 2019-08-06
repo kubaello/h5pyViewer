@@ -112,7 +112,7 @@ class MPLCanvasImg(FigureCanvas):
     colBar.norm=mpl.colors.Normalize(vmin=vmin, vmax=vmax)
     img.set_norm(colBar.norm)
     img.cmap._init();bg=img.cmap._lut[0].copy();bg[:-1]/=4
-    ax.set_axis_bgcolor(bg)
+    ax.set_facecolor(bg)
 
 
     self.colBar=colBar
@@ -358,7 +358,7 @@ class DlgColBarSetup(wx.Dialog):
         colBar.norm = mpl.colors.Normalize(vmin, vmax)
       elif v==1: #log mapping
         img.cmap._init();bg=img.cmap._lut[0].copy();bg[:-1]/=4
-        ax.set_axis_bgcolor(bg)
+        ax.set_facecolor(bg)
         vmin=1
         colBar.norm = mpl.colors.LogNorm(vmin,vmax)
     img.set_norm(colBar.norm)
