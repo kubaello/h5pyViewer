@@ -221,7 +221,7 @@ class MPLCanvasImg(FigureCanvas):
     colBar.set_cmap(cmap)
     colBar.draw_all()
     self.img.set_cmap(cmap)
-    self.img.get_axes().set_title(cmap)
+    self.img.axes.set_title(cmap)
     colBar.patch.figure.canvas.draw()
 
   def OnMouse(self, event):
@@ -337,7 +337,7 @@ class DlgColBarSetup(wx.Dialog):
     cmap=colBar.cmap
     nrm=colBar.norm
     img=canvas.img
-    ax=img.get_axes()
+    ax=img.axes
     data=img.get_array()
 
     v=self.cbColMap.Value
@@ -557,7 +557,7 @@ class HdfImageFrame(wx.Frame):
     #fig, ax = plt.subplots()
     #ax.imshow(data,vmax=100,interpolation='nearest')
     #plt.show()
-    ax=self.canvas.img.get_axes()
+    ax=self.canvas.img.axes
     try:
       for o in self.goMoment:
         o.remove()
