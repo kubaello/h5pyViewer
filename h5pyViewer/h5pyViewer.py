@@ -203,7 +203,7 @@ class HdfViewerFrame(wx.Frame):
 
   def OpenFile(self,fnHDF):
     try:
-      self.fid=h5py.h5f.open(fnHDF,flags=h5py.h5f.ACC_RDONLY)
+      self.fid=h5py.h5f.open(fnHDF.encode('utf-8'),flags=h5py.h5f.ACC_RDONLY)
     except IOError as e:
       sys.stderr.write('Unable to open File: '+fnHDF+'\n')
     else:
