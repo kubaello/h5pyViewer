@@ -75,7 +75,7 @@ def getVersion():
     #gitcmt=res[0][:7]
     p = subprocess.Popen('git describe --match ''v*.*.*'' --long', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     retval = p.wait()
-    res=p.stdout.readline()
+    res=p.stdout.readline().decode('utf-8')
     res=res[1:-1].rsplit('-',1)
     ver=res[0].replace('-','.')
     gitcmt=res[1][1:]
