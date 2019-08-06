@@ -95,7 +95,7 @@ class MyINSTALL_LIB (distutils.command.install_lib.install_lib):
     binDir=self.distribution.command_obj['install'].install_scripts
     print ('instDir',instDir,'binDir',binDir)
     if platform.system()=='Linux':
-      mod=0755
+      mod=0o755
       for fn in('h5pyViewer','hdfAttrib','hdfGrid','hdfImageGL','hdfImage','hdfTree'):
         fnInst=os.path.join(instDir,fn+'.py')
         fnBin=os.path.join(binDir,fn)
