@@ -497,7 +497,16 @@ class HdfImageFrame(wx.Frame):
       raise KeyError('wrong mode')
 
   def OnSetAxes(self, evt):
-    self.idxXY = (int(self.x_axis_combo.GetValue()), int(self.y_axis_combo.GetValue()))
+    new_x_axis = int(self.x_axis_combo.GetValue())
+    new_y_axis = int(self.y_axis_combo.GetValue())
+
+    # When user tries to assigns the same value to both axes, swap axes
+    if new_x_axis == new_y_axis:
+      new_x_axis, new_y_axis = self.idxXY[1], self.idxXY[0]
+
+    self.idxXY = (new_x_axis, new_y_axis)
+    self.x_axis_combo.SetValue(str(self.idxXY[0]))
+    self.y_axis_combo.SetValue(str(self.idxXY[1]))
     self.updateSliceSliders()
     self.updateDisplayedSlice()
 
