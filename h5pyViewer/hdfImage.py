@@ -296,7 +296,7 @@ class DlgColBarSetup(wx.Dialog):
     colMapLst=('hot','spectral','jet','gray','RdYlBu','hsv','gist_stern','gist_ncar','BrBG','RdYlBu','brg','gnuplot2',
                'prism','rainbow',)
 
-    self.cbColMap=cbColMap=wx.ComboBox(self, -1, choices=colMapLst, style=wx.CB_READONLY)
+    self.cbColMap=cbColMap=wx.ComboBox(self, -1, choices=colMapLst, style=0)
     cbColMap.Value=cmap.name
 
     sizer=wx.BoxSizer(wx.VERTICAL)
@@ -342,7 +342,7 @@ class DlgColBarSetup(wx.Dialog):
 
     v=self.cbColMap.Value
     if v!=cmap.name:
-      cmap=getattr(mpl.cm,v)
+      cmap=mpl.cm.get_cmap(v)
       colBar.set_cmap(cmap)
       colBar.draw_all()
       img.set_cmap(cmap)
