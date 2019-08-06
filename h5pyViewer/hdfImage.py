@@ -421,7 +421,7 @@ class HdfImageFrame(wx.Frame):
       wxAxCtrl.SetCallback(HdfImageFrame.OnSetView,wxAxCtrl)
     self.updateSliceSliders()
 
-    canvas.InitChild(data[self.getSlice()])
+    canvas.InitChild(self.getSliceArray())
 
     #self.Fit()
     self.Centre()
@@ -468,18 +468,22 @@ class HdfImageFrame(wx.Frame):
       ax_ctrl.SetValue(self.slice_idx[ax_idx])
       ax_ctrl.idx = ax_idx
 
-  def getSlice(self):
-    return tuple(idx if ax not in self.idxXY else slice(None) for ax, idx in enumerate(self.slice_idx))
+  def getSliceArray(self):
+    data = self.data
+    sl = tuple(idx if ax not in self.idxXY else slice(None) for ax, idx in enumerate(self.slice_idx))
+    data = data[sl]
+    if self.idxXY[0] > self.idxXY[1]:
+        data = data.T
+    return data
 
   def updateDisplayedSlice(self):
-    data=self.data
-    sl=self.getSlice()
+    data = self.getSliceArray()
 
     try:
       tomoNorm=self.tomoNorm
-      data=data[sl]*tomoNorm
+      data=data*tomoNorm
     except AttributeError:
-      data=data[sl]
+      pass
 
     self.canvas.img.set_data(data)
     self.canvas.img._extent = None
