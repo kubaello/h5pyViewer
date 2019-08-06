@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
+from six import iteritems
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -349,7 +350,7 @@ class DlgColBarSetup(wx.Dialog):
     colMapLst=[]
     #adding all existing colormaps
     #MplAddAllColormaps()
-    #for (k,v) in glumpy.colormap.__dict__.iteritems():
+    #for (k,v) in iteritems(glumpy.colormap.__dict__):
     #  if isinstance(v,glumpy.colormap.Colormap):
     #    colMapLst.append(k)
 

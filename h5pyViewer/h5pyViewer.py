@@ -6,6 +6,7 @@
 #|              Author Thierry Zamofing (thierry.zamofing@psi.ch)        |
 #*-----------------------------------------------------------------------*
 from __future__ import print_function
+from six import iteritems
 '''
 hdf5 viewer to dispay images, tables, attributes and trees of a hdf5 file.
 '''
@@ -48,7 +49,7 @@ class AboutFrame(wx.Frame):
     st0=wx.StaticText(panel,-1,s,(30,10))
     bmp = wx.StaticBitmap(panel,-1,wx.Bitmap(os.path.join(imgDir,'splash1.png'), wx.BITMAP_TYPE_ANY ), (30,st0.Position[1]+st0.Size[1]+10))
 
-    for k,v in os.environ.iteritems():
+    for k,v in iteritems(os.environ):
       print(k,'=',v)
 
 class HdfTreePopupMenu(wx.Menu):

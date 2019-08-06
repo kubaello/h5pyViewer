@@ -129,7 +129,7 @@ def runSetup(**kv):
         #'package_dir' :{'h5pyViewer':'.'},
         'package_data':{'h5pyViewer': ['images/*.png','images/*.ico']},
         #'requires' requires: h5py==2.0.1 libDetXR==0.0.0.6 numpy==1.7.1 matplotlib==1.2.0
-        'requires' : ['ctypes','h5py','numpy','matplotlib']
+        'requires' : ['ctypes','h5py','numpy','matplotlib','six']
       }
   if kv:
     args.update(kv)
