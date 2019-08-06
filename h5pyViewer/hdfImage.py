@@ -402,6 +402,8 @@ class HdfImageFrame(wx.Frame):
     y_axis_combo.SetValue(str(self.idxXY[1]))
     xy_sel_sizer.Add(y_axis_combo, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=5)
 
+    xy_sel_sizer.Add(wx.StaticText(self, label="Shape: %s" % (data.shape,)), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=20)
+
     self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, x_axis_combo)
     self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, y_axis_combo)
     self.x_axis_combo = x_axis_combo
