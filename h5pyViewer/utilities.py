@@ -42,9 +42,9 @@ class SliderGroup():
     self.slider = wx.Slider(parent, -1)
     self.slider.SetRange(range[0],range[1])
     sizer = wx.BoxSizer(wx.HORIZONTAL)
-    sizer.Add(self.sliderLabel, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, border=2)
-    sizer.Add(self.sliderText, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, border=2)
-    sizer.Add(self.slider, 1, wx.EXPAND)
+    sizer.Add(self.sliderLabel, 0, wx.ALIGN_CENTER | wx.ALL, border=2)
+    sizer.Add(self.sliderText, 0, wx.ALIGN_CENTER | wx.ALL, border=2)
+    sizer.Add(self.slider, 1, wx.ALIGN_CENTER)
     self.sizer = sizer
     self.slider.Bind(wx.EVT_SLIDER, self.sliderHandler)
     self.sliderText.Bind(wx.EVT_TEXT_ENTER, self.sliderTextHandler)

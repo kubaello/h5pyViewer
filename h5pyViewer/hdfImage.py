@@ -386,27 +386,27 @@ class HdfImageFrame(wx.Frame):
     canvas =  MPLCanvasImg(self,self.SetStatusCB)
 
     sizer = wx.BoxSizer(wx.VERTICAL)
-    sizer.Add(canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
+    sizer.Add(canvas, 1, wx.LEFT | wx.TOP | wx.EXPAND)
     self.SetSizer(sizer)
 
     toolbar=ut.AddToolbar(canvas,sizer)
 
     xy_sel_sizer = wx.BoxSizer(wx.HORIZONTAL)
-    xy_sel_sizer.Add(wx.StaticText(self, label="X Axis:"), wx.ALIGN_CENTER_VERTICAL)
+    xy_sel_sizer.Add(wx.StaticText(self, label="X Axis:"), 0, wx.ALIGN_CENTER_VERTICAL)
     x_axis_combo = wx.ComboBox(self, -1, choices=tuple(str(x) for x in range(0,data.ndim)), style=wx.CB_READONLY, size=wx.Size(100, -1))
     x_axis_combo.SetValue(str(self.idxXY[0]))
 
-    xy_sel_sizer.Add(x_axis_combo, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=10)
-    xy_sel_sizer.Add(wx.StaticText(self, label="Y Axis:"), wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=20)
+    xy_sel_sizer.Add(x_axis_combo, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=5)
+    xy_sel_sizer.Add(wx.StaticText(self, label="Y Axis:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=20)
     y_axis_combo = wx.ComboBox(self, -1, choices=tuple(str(x) for x in range(0,data.ndim)), style=wx.CB_READONLY, size=wx.Size(100, -1))
     y_axis_combo.SetValue(str(self.idxXY[1]))
-    xy_sel_sizer.Add(y_axis_combo, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=10)
+    xy_sel_sizer.Add(y_axis_combo, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, border=5)
 
     self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, x_axis_combo)
     self.Bind(wx.EVT_COMBOBOX, self.OnSetAxes, y_axis_combo)
     self.x_axis_combo = x_axis_combo
     self.y_axis_combo = y_axis_combo
-    sizer.Add(xy_sel_sizer, 0, wx.ALIGN_LEFT)
+    sizer.Add(xy_sel_sizer, 0, wx.ALIGN_LEFT | wx.EXPAND | wx.ALL, border=5)
 
     self.wxAxCtrlLst=[]
     for idx,l in enumerate(data.shape):
