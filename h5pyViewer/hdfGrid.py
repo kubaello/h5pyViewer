@@ -41,7 +41,7 @@ class DlgFormatSetup(wx.Dialog):
     sizer.Fit(self)
 
   def OnModify(self, event):
-    #print 'OnModify'
+    #print('OnModify')
     parent=self.GetParent()
     #event.EventObject.Value
     #self.cbPredef.Value
@@ -228,7 +228,7 @@ class HdfGridFrame(wx.Frame):
       else:
         tbl.view = tbl.data[sl].T
     self.wxAxCtrlLst=wxAxCtrlLst
-    #print type(tbl)
+    #print(type(tbl))
 
     grid.SetTable (tbl, True)
     #AutoSize must be called after SetTable, but takes lot of time on big tables!
@@ -248,12 +248,12 @@ class HdfGridFrame(wx.Frame):
     if event.ShiftDown():
       col=event.RowOrCol
       sz=self.grid.GetColSize(col)
-      print 'OnColSize',col,sz
+      print('OnColSize',col,sz)
       self.grid.SetDefaultColSize(sz, True)   
       self.grid.ForceRefresh()    
     
   def OnSetFormat(self,event):
-    print 'OnSetFormat'
+    print('OnSetFormat')
     
     fmt=getattr(self.grid.Table,'cellFormat','')
     dlg=DlgFormatSetup(self,fmt)

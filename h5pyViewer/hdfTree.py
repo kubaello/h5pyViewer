@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -75,7 +76,7 @@ class HdfTreeCtrl(wx.TreeCtrl):
     self.ExpandLvl(wxNode,3)
 
   def ExpandLvl(self,wxNode,lvl):
-    #print lvl,self.GetItemText(wxNode)
+    #print(lvl,self.GetItemText(wxNode))
     self.Expand(wxNode)
     lvl=lvl-1
     if lvl==0:

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -47,7 +48,7 @@ class HdfAttrListCtrl(wx.ListCtrl):
       idxItem=self.InsertStringItem(idxAttr, aid.name)
       val=GetAttrVal(aid)
       self.SetStringItem(idxItem, 1, str(val))
-      #print idxAttr,idxItem,aid,aid.name,val
+      #print(idxAttr,idxItem,aid,aid.name,val)
       try:
         aidUnit=h5py.h5a.open(hid,'_u_'+aid.name)
       except KeyError as e:
@@ -74,7 +75,7 @@ class HdfAttrListCtrl(wx.ListCtrl):
     aid=h5py.h5a.open(hid,index=event.Data)
     val=GetAttrVal(aid)
     if type(val)!=np.ndarray:
-      print val
+      print(val)
       return
     frame=HdfGridFrame(self,aid.name,val)
     frame.Show(True)

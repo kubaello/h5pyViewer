@@ -5,6 +5,7 @@
 #|                                                                       |
 #|              Author Thierry Zamofing (thierry.zamofing@psi.ch)        |
 #*-----------------------------------------------------------------------*
+from __future__ import print_function
 '''
 hdf5 viewer to dispay images, tables, attributes and trees of a hdf5 file.
 '''
@@ -18,15 +19,15 @@ from hdfImage import  *
 try:
   from hdfImageGL import  *
 except ImportError as e:
-  print 'ImportError: '+e.message
+  print('ImportError: '+e.message)
 try:
   from FrmPyFAI import  *
 except ImportError as e:
-  print 'ImportError: '+e.message
+  print('ImportError: '+e.message)
 try:
   from FrmProcRoiStat import ProcRoiStatFrame
 except ImportError as e:
-  print 'ImportError: '+e.message
+  print('ImportError: '+e.message)
 
 import utilities as ut
 
@@ -48,7 +49,7 @@ class AboutFrame(wx.Frame):
     bmp = wx.StaticBitmap(panel,-1,wx.Bitmap(os.path.join(imgDir,'splash1.png'), wx.BITMAP_TYPE_ANY ), (30,st0.Position[1]+st0.Size[1]+10))
 
     for k,v in os.environ.iteritems():
-      print k,'=',v
+      print(k,'=',v)
 
 class HdfTreePopupMenu(wx.Menu):
   def __init__(self, wxObjSrc):
@@ -130,13 +131,13 @@ class HdfTreePopupMenu(wx.Menu):
     dlg = wx.FileDialog(wxTree, "Choose valid mask file (e.g. pilatus_valid_mask.mat)", os.getcwd(), '','MATLAB files (*.mat)|*.mat|all (*.*)|*.*', wx.FD_OPEN|wx.FD_CHANGE_DIR)
     if dlg.ShowModal() == wx.ID_OK:
       fnValMsk= dlg.GetPath()
-      print 'OnOpen',fnValMsk
+      print('OnOpen',fnValMsk)
     dlg.Destroy()
     if not fnValMsk: return
     dlg = wx.FileDialog(wxTree, "Choose ROI mask file (e.g. pilatus_integration_mask.mat)", os.getcwd(), '','MATLAB files (*.mat)|*.mat|all (*.*)|*.*', wx.FD_OPEN|wx.FD_CHANGE_DIR)
     if dlg.ShowModal() == wx.ID_OK:
       fnIntegMsk = dlg.GetPath()
-      print 'OnOpen',fnIntegMsk
+      print('OnOpen',fnIntegMsk)
     dlg.Destroy()
     if not fnIntegMsk: return
     #fnMatRoi='/scratch/detectorData/cSAXS_2013_10_e14608_georgiadis_3D_for_Marianne/analysis/data/pilatus_integration_mask.mat'
@@ -179,7 +180,7 @@ import userSample as us;reload(us);us.test1(hid)
     #for cmd in [
     #  'wnd=app.GetTopWindow();wxTree=wnd.wxTree',
     #  'wxNode=wnd.wxTree.GetSelection()',
-    #  'print wnd.fid',
+    #  'print(wnd.fid)',
     #  'lbl=wxTree.GetItemText(wxNode)',
     #  'hid=wxTree.GetPyData(wxNode)']:
     #  shell.run(cmd, prompt=False)
@@ -188,14 +189,14 @@ import userSample as us;reload(us);us.test1(hid)
     wxTree,wxNode=self.wxObjSrc
     lbl=wxTree.GetItemText(wxNode)
     hid=wxTree.GetPyData(wxNode)
-    print HdfViewerFrame.GetPropertyStr(wxTree,wxNode)
+    print(HdfViewerFrame.GetPropertyStr(wxTree,wxNode))
 
   def OnItem2(self, event):
-    print 'OnItem2'
+    print('OnItem2')
     pass
 
   def OnItem3(self, event):
-    print 'OnItem3'
+    print('OnItem3')
     pass
 
 class HdfViewerFrame(wx.Frame):
@@ -210,7 +211,7 @@ class HdfViewerFrame(wx.Frame):
 
   def CloseFile(self):
     #http://docs.wxwidgets.org/2.8/wx_windowdeletionoverview.html#windowdeletionoverview
-    #print 'CloseFile'
+    #print('CloseFile')
     try:
       self.fid.close()
       del self.fid
@@ -250,11 +251,11 @@ class HdfViewerFrame(wx.Frame):
       #self.SetStatusText("You selected: %s" % mypath)
       self.CloseFile()
       self.OpenFile(path)
-      #print 'OnOpen',path
+      #print('OnOpen',path)
     dlg.Destroy()
 
   def OnCloseWindow(self, event):
-    #print 'OnCloseWindow'
+    #print('OnCloseWindow')
     self.Destroy()
 
   def OnAbout(self,event):
@@ -313,7 +314,7 @@ class HdfViewerFrame(wx.Frame):
     hidStr=wxTree.GetItemText(wxNode)
     hid=wxTree.GetPyData(wxNode)
     #o=wxTree.GetItemData(wxNode)
-    #print o.Data,wxTree.GetPyData(wxNode)
+    #print(o.Data,wxTree.GetPyData(wxNode))
     #if type(gid)==h5py.h5g.GroupID:
     txt=path+'\n'
     t=type(hid)
@@ -330,7 +331,7 @@ class HdfViewerFrame(wx.Frame):
       hid=h5py.h5o.open(hid,'/')
       t=type(hid)
     objInf=h5py.h5o.get_info(hid)
-    #print t,hid.id,objInf.fileno, objInf.rc, objInf.type, objInf.addr, objInf.hdr
+    #print(t,hid.id,objInf.fileno, objInf.rc, objInf.type, objInf.addr, objInf.hdr)
     txt+=type(hid).__name__+':%d\n'%hid.id
     txt+='addr:%d fileno:%d refCnt:%d\n'%(objInf.addr,objInf.fileno, objInf.rc)
     try:

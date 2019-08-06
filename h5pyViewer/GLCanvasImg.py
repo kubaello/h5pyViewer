@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -29,8 +30,8 @@ def MplAddColormap(m,lut):
       kG,vG,dummy=zip(*lstG)
       kB,vB,dummy=zip(*lstB)
     except TypeError as e:
-      print 'failed to add '+m+' (probably some lambda function)'
-      #print lut
+      print('failed to add '+m+' (probably some lambda function)')
+      #print(lut)
       return
     kLst=set()
     kLst.update(kR)
@@ -54,7 +55,7 @@ def MplAddAllColormaps(colMapNameLst=None):
   try:
     import matplotlib.cm as cm
   except ImportError as e:
-    print 'ImportError: '+e.message
+    print('ImportError: '+e.message)
   if not colMapNameLst:
     colMapNameLst=[m for m in cm.datad if not m.endswith("_r")]
   for m in colMapNameLst:
@@ -92,9 +93,9 @@ class GLCanvasImg(wx.glcanvas.GLCanvas):
       return
     if event.ButtonDown():
       self.mouseStart=(np.array(event.GetPosition()),self.imgCoord.copy())
-      print 'drag Start'
+      print('drag Start')
     elif event.ButtonUp():
-      print 'drag End'
+      print('drag End')
       del self.mouseStart
     else:
       try:
@@ -105,7 +106,7 @@ class GLCanvasImg(wx.glcanvas.GLCanvas):
         ic=self.imgCoord
         pOfs=(ic[0::4]+[.5,.5])*pSz
         tPos=(pMouse-pOfs)/(pSz-2*pOfs)#position on the image 0..1
-        #print tPos
+        #print(tPos)
         if (tPos<0).any() or (tPos>1).any(): return
         tPos=tPos*(ic[3::4]-ic[1::4])+ic[1::4]
         tPos[0]*=data.shape[1]
@@ -137,7 +138,7 @@ class GLCanvasImg(wx.glcanvas.GLCanvas):
         if icStart[7]-tOfs[1]>1:
           tOfs[1]=icStart[7]-1
 
-        #print icStart[1::4],icStart[3::4],tOfs
+        #print(icStart[1::4],icStart[3::4],tOfs)
 
         ic[1::4]=icStart[1::4]-tOfs
         ic[3::4]=icStart[3::4]-tOfs
@@ -168,7 +169,7 @@ class GLCanvasImg(wx.glcanvas.GLCanvas):
     tMax[tMax>1]=1
     ic[1::4]=tMin
     ic[3::4]=tMax
-    #print tPos,pSz,pMouse,n,ic
+    #print(tPos,pSz,pMouse,n,ic)
     self.SetZoom()
     self.Refresh(False)
 
@@ -176,22 +177,22 @@ class GLCanvasImg(wx.glcanvas.GLCanvas):
 
   def OnEraseBackground(self, event):
     """Process the erase background event."""
-    #print 'OnEraseBackground'
+    #print('OnEraseBackground')
     pass # Do nothing, to avoid flashing on MSWin
 
   def OnSize(self, event):
-    print 'OnSize'
+    print('OnSize')
     wx.CallAfter(self.DoSetViewport)
     event.Skip()
   def DoSetViewport(self):
-    print 'DoSetViewport'
+    print('DoSetViewport')
     size = self.GetClientSize()
     self.SetCurrent(self.context)
     glViewport(0, 0, size.width, size.height)
 
   def OnPaint(self, event):
     """Process the drawing event."""
-    #print 'OnPaint'
+    #print('OnPaint')
     self.SetCurrent(self.context)
 
     # This is a 'perfect' time to initialize OpenGL ... only if we need to
@@ -307,7 +308,7 @@ use mouse wheel to zoom in/out the image at a given point
 
   def InitGL(self):
     """Initialize OpenGL for use in the window."""
-    #print 'InitGL'
+    #print('InitGL')
     glClearColor(.2, .2, .2, 1)
     colMap=glumpy.colormap.Hot
     txrColBar=np.linspace(0.,1., 256).astype(np.float32)
@@ -319,7 +320,7 @@ use mouse wheel to zoom in/out the image at a given point
 
   def Reshape(self, width, height):
     """Reshape the OpenGL viewport based on the dimensions of the window."""
-    #print 'Reshape'
+    #print('Reshape')
     glViewport(0, 0, width, height)
 
     glMatrixMode(GL_PROJECTION)
@@ -363,8 +364,8 @@ class DlgColBarSetup(wx.Dialog):
           MplAddColormap(k,lut)
           v=glumpy.colormap.__dict__[k]
         except ImportError as e:
-          print e.message
-          print "don't have colormap "+k
+          print(e.message)
+          print("don't have colormap "+k)
           continue
       if isinstance(v,glumpy.colormap.Colormap):
         colMapLst.append(k)
@@ -403,7 +404,7 @@ class DlgColBarSetup(wx.Dialog):
     sizer.Fit(self)
 
   def OnModify(self, event):
-    #print 'OnModify'
+    #print('OnModify')
     parent=self.GetParent()
     glImg=parent.glImg
     glColBar=parent.glColBar

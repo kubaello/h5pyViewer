@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 if __name__ == '__main__':
   #Used to guarantee to use at least Wx2.8
   import wxversion
@@ -29,7 +31,7 @@ class StopWatch():
   @classmethod
   def Log(cls,str=None,restart=True):
     ts=time.time()
-    print '%.6f'%(ts-cls.ts),str
+    print('%.6f'%(ts-cls.ts),str)
     if restart:
       cls.ts=ts
 

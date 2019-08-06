@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+from __future__ import print_function
 
 #FOR DISTUTILS READ:
 #http://docs.python.org/2/distutils/index.html
@@ -51,7 +52,7 @@ def getVersion():
   #  for subdirname in dirnames:
   #    os.path.join(dirname, subdirname)
   #  for filename in filenames:
-  #    print os.path.join(dirname, filename)
+  #    print(os.path.join(dirname, filename))
 
   fn='./PKG-INFO'
   if os.access(fn, os.R_OK):
@@ -61,7 +62,7 @@ def getVersion():
       if ln.startswith('Version:'):
         ver=re.match('Version:\s*(\S*)', ln).group(1)
       elif ln.startswith('Summary:'):
-        #print ln
+        #print(ln)
         gitcmt=re.search('\(git:(.*)\)', ln).group(1)
     fo.close()
   else:

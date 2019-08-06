@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -28,7 +29,7 @@ import pylab as plt #used for the colormaps
 try:
   from libDetXR.procMoment import ProcMoment
 except ImportError as e:
-  print 'ImportError: '+e.message
+  print('ImportError: '+e.message)
 
 
 #from scipy import ndimage as ndi
@@ -42,7 +43,7 @@ except ImportError as e:
 class ShiftedLogNorm(mpl.colors.LogNorm):
   #copied and modified from LogNorm
     def __call__(self, value, clip=None):
-      #print value.shape,self.vmin,self.vmax,self.clip,clip
+      #print(value.shape,self.vmin,self.vmax,self.clip,clip)
       if clip is None:
           clip = self.clip
       ofs0=1-self.vmin
@@ -120,7 +121,7 @@ class MPLCanvasImg(FigureCanvas):
     self.img=img
 
   def OnMotion(self,event):
-    #print event,event.x,event.y,event.inaxes,event.xdata,event.ydata
+    #print(event,event.x,event.y,event.inaxes,event.xdata,event.ydata)
     if event.inaxes==self.ax:
       x=int(round(event.xdata))
       y=int(round(event.ydata))
@@ -129,7 +130,7 @@ class MPLCanvasImg(FigureCanvas):
       except IndexError as e:
         pass
       else:
-        #print x,y,v
+        #print(x,y,v)
         self.SetStatusCB(self.Parent,0,(x,y,v))
     elif event.inaxes==self.colBar.ax:
       colBar=self.colBar
@@ -147,8 +148,8 @@ class MPLCanvasImg(FigureCanvas):
       return
       #if event.inaxes != self.cbar.ax: return
     colBar=self.colBar
-    #print vmin,vmax,p0,p1,pS,type(colBar.norm)
-    #print 'x0=%f, xpress=%f, event.xdata=%f, dx=%f, x0+dx=%f'%(x0, xpress, event.xdata, dx, x0+dx)
+    #print(vmin,vmax,p0,p1,pS,type(colBar.norm))
+    #print('x0=%f, xpress=%f, event.xdata=%f, dx=%f, x0+dx=%f'%(x0, xpress, event.xdata, dx, x0+dx))
 
     if isinstance(colBar.norm,mpl.colors.LogNorm):#type(colBar.norm)==mpl.colors.LogNorm does not work...
       if event.button==1:
@@ -163,7 +164,7 @@ class MPLCanvasImg(FigureCanvas):
     elif event.button==3:#scale around point
       scale= np.exp((pS-event.y)/100)
       vS=vmin+(vmax-vmin)/(p1-p0)*(pS-p0)
-      #print scale,vS
+      #print(scale,vS)
       colBar.norm.vmin = vS-scale*(vS-vmin)
       colBar.norm.vmax = vS-scale*(vS-vmax)
     self.img.set_norm(colBar.norm)#force image to redraw
@@ -171,15 +172,15 @@ class MPLCanvasImg(FigureCanvas):
 
   def OnBtnPress(self, event):
     """on button press we will see if the mouse is over us and store some data"""
-    #print dir(event.guiEvent)
+    #print(dir(event.guiEvent))
     if event.inaxes == self.colBar.ax:
       #if event.guiEvent.LeftDClick()==True:
-      #    print dlg
+      #    print(dlg)
       pt=self.colBar.ax.bbox.get_points()[:,1]
       nrm=self.colBar.norm
       self.colBarPressed = (nrm.vmin,nrm.vmax,pt[0],pt[1],event.y)
       #self.colBarPressed = event.x, event.y
-      #print self.colBarPressed
+      #print(self.colBarPressed)
       #self.OnMouse(event)
     pass
 
@@ -202,7 +203,7 @@ class MPLCanvasImg(FigureCanvas):
       else:#scale around point
         scale= np.exp((-event.step)/10)
         vS=vmin+(vmax-vmin)/(p1-p0)*(pS-p0)
-        #print scale,vS
+        #print(scale,vS)
         colBar.norm.vmin = vS-scale*(vS-vmin)
         colBar.norm.vmax = vS-scale*(vS-vmax)
       self.img.set_norm(colBar.norm)#force image to redraw
@@ -226,7 +227,7 @@ class MPLCanvasImg(FigureCanvas):
   def OnMouse(self, event):
     for k in dir(event):
       if k[0]!='_':
-        print k,getattr(event,k)
+        print(k,getattr(event,k))
 
 class DlgColBarSetupOld(wx.Dialog):
   def __init__(self,parent):
@@ -257,7 +258,7 @@ class DlgColBarSetupOld(wx.Dialog):
 
   def OnBtnOk(self, event):
     event.Skip()#do not consume (use event to close the window and sent return code)
-    print 'OnBtnOk'
+    print('OnBtnOk')
     parent=self.GetParent()
     canvas=parent.canvas
     colBar=canvas.colBar
@@ -329,7 +330,7 @@ class DlgColBarSetup(wx.Dialog):
     sizer.Fit(self)
 
   def OnModify(self, event):
-    #print 'OnModify'
+    #print('OnModify')
     parent=self.GetParent()
     canvas=parent.canvas
     colBar=canvas.colBar
@@ -476,7 +477,7 @@ class HdfImageFrame(wx.Frame):
       dlg = wx.FileDialog(self, "Choose valid mask file (e.g. pilatus_valid_mask.mat)", os.getcwd(), '','MATLAB files (*.mat)|*.mat|all (*.*)|*.*', wx.FD_OPEN|wx.FD_CHANGE_DIR)
       if dlg.ShowModal() == wx.ID_OK:
         fnMatMsk = dlg.GetPath()
-        print 'OnOpen',fnMatMsk
+        print('OnOpen',fnMatMsk)
       dlg.Destroy()
       if not fnMatMsk:
         return
@@ -508,7 +509,7 @@ class HdfImageFrame(wx.Frame):
 
 
       plt.show()
-      #print pm.resArr[0:3],pm.resArr[1]/pm.resArr[0],pm.resArr[2]/pm.resArr[0]
+      #print(pm.resArr[0:3],pm.resArr[1]/pm.resArr[0],pm.resArr[2]/pm.resArr[0])
     else:
       for o in self.goMoment:
         o.remove()
@@ -524,11 +525,11 @@ class HdfImageFrame(wx.Frame):
     try:
       data.ravel()[pm.mskIdx]=0
     except AttributeError as e:
-      print e
+      print(e)
     try:
       data=data[pm.roi]
     except AttributeError as e:
-      print e
+      print(e)
     #data=np.log(data+1)
     #data[100:110,500:510]=1000 #y,x
     #data[650:850,700:850]=0 #y,x
@@ -552,7 +553,7 @@ class HdfImageFrame(wx.Frame):
     ang=0.5*np.arctan2(2*u11,(u20-u02))/(2*np.pi)*360. #orientation value 0..1
     exc=np.sqrt(1-l1/l0) #eccentricity :circle=0: http://en.wikipedia.org/wiki/Eccentricity_%28mathematics%29
 
-    print 'xb:%g yb:%g cov:%g %g %g %g  ang:%g exc:%g'%((xm, ym)+tuple(cov.ravel())+(ang,exc))
+    print('xb:%g yb:%g cov:%g %g %g %g  ang:%g exc:%g'%((xm, ym)+tuple(cov.ravel())+(ang,exc)))
     #fig, ax = plt.subplots()
     #ax.imshow(data,vmax=100,interpolation='nearest')
     #plt.show()

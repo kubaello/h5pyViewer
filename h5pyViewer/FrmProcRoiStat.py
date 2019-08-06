@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 #*-----------------------------------------------------------------------*
 #|                                                                       |
 #|  Copyright (c) 2013 by Paul Scherrer Institute (http://www.psi.ch)    |
@@ -44,9 +45,9 @@ class ProcRoiStatFrame(HdfImageGLFrame):
     self.prs=prs=ProcRoiStat()
     prs.SetRoiMat((fnValMsk,fnIntegMsk),raw.shape)
     prs.SetProcess('avg')
-    print 'numnber of ROI,',prs.roiLenArr.size,'Total number of pixels',prs.roiIdxArr.size
+    print('numnber of ROI,',prs.roiLenArr.size,'Total number of pixels',prs.roiIdxArr.size)
     prs.Process(raw)
-    print prs.resArr[0,:].max(),prs.resArr[0,:].min()
+    print(prs.resArr[0,:].max(),prs.resArr[0,:].min())
     canvas.data=prs.resArr
     #.reshape(prs.mskNumSeg,-1)
     #canvas.data=np.rot90(prs.resArr[0,:].reshape(-1,prs.mskNumSeg))

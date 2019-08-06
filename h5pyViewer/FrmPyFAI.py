@@ -40,7 +40,7 @@ def FindCenter(arr):
   yy=np.arange(shape[1])
   x=(xx*sx).sum()/sx.sum()
   y=(yy*sy).sum()/sy.sum()
-  #print x,y
+  #print(x,y)
   #import pylab as plt #used for the colormaps
   #plt.figure()
   #plt.subplot(211)
@@ -76,7 +76,7 @@ class MPLCanvasPyFAI1D(FigureCanvas):
     self.hl=ax.plot(*out)
     ax.set_yscale('log')
     #canvas.data=imgPolar
-    #print imgPolar.shape
+    #print(imgPolar.shape)
     #out=ai.xrpd(imgData,1000)
     #out=ai.xrpd_OpenCL(imgData,1000)
     #import pylab
@@ -195,7 +195,7 @@ class HdfPyFAIFrame(HdfImageGLFrame):
 
     imgPolar,theta,chi=self.ai.xrpd2(raw,self.numPtTh,self.numPtCh)
     canvas.data=imgPolar
-    print imgPolar.shape
+    print(imgPolar.shape)
 
   def BuildMenu(self):
     HdfImageGLFrame.BuildMenu(self)
@@ -281,7 +281,7 @@ class DlgSetupPyFAI(wx.Dialog):
     sizer.Fit(self)
 
   def OnModify(self, event):
-    print 'OnModify'
+    print('OnModify')
     frm=self.GetParent()
     ds=frm.dataSet
     canvas=frm.canvas
@@ -301,7 +301,7 @@ class DlgSetupPyFAI(wx.Dialog):
       glImg._data=canvas.GetTxrData()
       glImg._texture=Texture(glImg._data)
       #self.glImg=glImg=glumpy.image.Image(txrData, colormap=colMap,vmin=txrRng[0], vmax=txrRng[1])
-      print canvas.data.shape,glImg.data.shape
+      print(canvas.data.shape,glImg.data.shape)
     glImg.update()
     canvas.OnPaint(None)#force to repaint, Refresh and Update do not force !
     frm.Refresh(False)
